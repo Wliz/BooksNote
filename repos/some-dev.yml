@@ -1,2 +1,2 @@
 my:
-  message: this is a test page config. And I change the config service file.
+  message: this is a test page config. And I change the config service file. 测试是否能不启动微服务即可自动适应变化
