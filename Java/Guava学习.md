@@ -223,7 +223,7 @@ System.out.println(Iterables.partition(integerIterable, 2));
 ## 2.4 [Guava Cache](http://ifeve.com/google-guava-cachesexplained/)
 本地缓存，获取缓存-如果没有-则计算[get-if-absent-compute]
 
-![segment](../images/segment.jpg)
+![segment](https://github.com/Wliz/BooksNote/blob/master/%08images/segment.jpg)
 
 适用条件：
 > 1. 使用空间换取时间（速度）
