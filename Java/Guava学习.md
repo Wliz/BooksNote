@@ -1,4 +1,5 @@
 # Guava学习
+## 目录
 
 [1.1 使用和避免Null(Optional)](#11-使用和避免nulloptional)
 
@@ -15,7 +16,9 @@
 
 [2.4 Guava Cache](#24-guava-cache)
 
-[2.5 字符串处理](#字符串处理)
+[2.5 字符串处理](#25-字符串处理)
+
+---
 
 ## 1.1 使用和避免Null(Optional)
 使用特殊值代替Null值让查找操作的语义更清晰；
@@ -320,7 +323,7 @@ try {
 
 注：可以使用方法显示的插入数据put，删除数据invalidate，刷新数据refresh......
 
-## [2.5 字符串处理](http://ifeve.com/google-guava-strings/)
+## 2.5 [字符串处理](http://ifeve.com/google-guava-strings/)
 连接器（Joiner）,拆分器（Splitter），字符匹配器（CharMatcher），字符集（Charsets），大小写格式（CaseFormat）
 ```Java
 // jdk字符串集合可以
