@@ -1,4 +1,22 @@
 # Guava学习
+
+[1.1 使用和避免Null(Optional)](#11-使用和避免nulloptional)
+
+[1.2 Preconditions前置条件](#12-preconditions前置条件)
+
+[2.1 不可变集合(add&remove直接抛出异常)](#21-不可变集合addremove直接抛出异常)
+
+[2.2 Guava新集合涉略](#22-guava新集合涉略)
+
+[2.3 集合工具类(java.util.Colletions扩展)](#23-集合工具类javautilcolletions扩展)
+- [Java Collections常用](#java-collections常用)
+
+- [Guava 集合工具类](#guava-集合工具类)
+
+[2.4 Guava Cache](#24-guava-cache)
+
+[2.5 字符串处理](#字符串处理)
+
 ## 1.1 使用和避免Null(Optional)
 使用特殊值代替Null值让查找操作的语义更清晰；
 
@@ -205,6 +223,8 @@ System.out.println(Iterables.partition(integerIterable, 2));
 ## 2.4 [Guava Cache](http://ifeve.com/google-guava-cachesexplained/)
 本地缓存，获取缓存-如果没有-则计算[get-if-absent-compute]
 
+![segment](../images/segment.jpg)
+
 适用条件：
 > 1. 使用空间换取时间（速度）
 > 2. 一些key可以被频繁查询
@@ -242,11 +262,65 @@ try {
     e.printStackTrace();
 }
 ```
+```Java
+LoadingCache<String, Integer> cache = CacheBuilder.newBuilder()
+    // 缓存数量
+    .maximumSize(10)
+    // 缓存有效期5秒
+    .expireAfterWrite(5, TimeUnit.SECONDS)
+    .removalListener(notification -> System.out.println("key: " + notification.getKey() + " value: " + notification.getValue()))
+    .build(CacheLoader.from(key -> -1));
+
+// 只进行查询，未命中返回null
+System.out.println("key1: " + cache.getIfPresent("key1"));
+// 手动放入数据
+cache.put("key1", 1);
+System.out.println("key1: " + cache.getIfPresent("key1"));
+System.out.println("size: " + cache.size());
+// 手动注销缓存
+cache.invalidate("key1");
+System.out.println("key1: " + cache.getIfPresent("key1"));
+
+try {
+// 查询缓存，未命中，则加载
+    System.out.println("key2: " + cache.get("key2"));
+    System.out.println("size: " + cache.size());
+    cache.put("key2", 5);
+    System.out.println("key2: " + cache.get("key2"));
+
+    // 连续插入10个数据
+    for (int i = 3; i < 13; i++) {
+        cache.put("key" + i, i);
+    }
+    System.out.println("size: " + cache.size());
+    // 最近最少使用删除缓存
+    System.out.println("key2: " + cache.get("key2"));
+    // 等待5秒
+    Thread.sleep(5000);
+    // 超时失效后，size未更新
+    System.out.println("size: " + cache.size());
+    System.out.println("key3: " + cache.getIfPresent("key3"));
+    // 操作的时候进行维护，而非单独启动线程维护，减少消耗
+    System.out.println("size: " + cache.size());
+    cache.put("key2", 22);
+    System.out.println("size: " + cache.size());
+    System.out.println("key2: " + cache.get("key2"));
+    System.out.println("size: " + cache.size());
+
+    Thread.sleep(5000);
+    System.out.println("size: " + cache.size());
+    System.out.println("key2: " + cache.getIfPresent("key2"));
+    System.out.println("size: " + cache.size());
+    // cache.refresh("key2");
+} catch (Exception e) {
+    e.printStackTrace();
+}
+```
 缓存回收(是通过读写操作时顺便进行回收操作，而非单线程监测)：maxnumSize（容量回收），定时回收[expireAfterAccess读写, expireAfterWrite写], 还有引用回收
 
 注：可以使用方法显示的插入数据put，删除数据invalidate，刷新数据refresh......
 
-## [字符串处理](http://ifeve.com/google-guava-strings/)
+## [2.5 字符串处理](http://ifeve.com/google-guava-strings/)
 连接器（Joiner）,拆分器（Splitter），字符匹配器（CharMatcher），字符集（Charsets），大小写格式（CaseFormat）
 ```Java
 // jdk字符串集合可以
