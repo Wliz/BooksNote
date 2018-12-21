@@ -21,15 +21,15 @@
 ---
 
 ## 1.1 使用和避免Null(Optional)
-使用特殊值代替Null值让查找操作的语义更清晰；
+使用特殊值代替Null值让查找操作的语义更清晰；
 
-如map.get(key)操作，如果key为Null或者key不在map集合内，则都会返回Null，这会造成混淆，语义不清；
+如map.get(key)操作，如果key为Null或者key不在map集合内，则都会返回Null，这会造成混淆，语义不清；
 
-jdk1.8新增的Optional借鉴Guava的Optional进行相应的Null值操作(方法返回值类型指定为Optional，则迫使调用者考虑*返回值引用缺失*的情形)。
+jdk1.8新增的Optional借鉴Guava的Optional进行相应的Null值操作(方法返回值类型指定为Optional，则迫使调用者考虑*返回值引用缺失*的情形)。
 ## 1.2 Preconditions前置条件
 用处：对方法的参数进行一些前置验证，避免if-else类型的验证代码
 
-> 1. checkArgument: 根据第一个参数true或false验证参数
+> 1. checkArgument: 根据第一个参数true或false验证参数
 > 2. checkState: 检查对象状态
 > 3. checkNotNull: 检查是否为空
 > 4. checkElementIndex: 检查位置（顺序）是否有效(index <= size)
@@ -60,7 +60,7 @@ public static void getPreConditionTest(String name, Integer age) {
 }
 ```    
 ## 2.1 不可变集合(add&remove直接抛出异常)
-注：集合元素为T实例时，集合还是可以发生变化的（浅层）
+注：集合元素为T实例时，集合还是可以发生变化的（浅层）
 
 
 使用场景：初始化后不可变，只读的集合（防御性编程，多线程安全）
@@ -74,7 +74,7 @@ Map | ImmutableMap
 SortedSet | ImmutableSortedSet
 SortedMap | ImmutableSortedMap
 ## 2.2 Guava新集合涉略
-1. MultiSet: 可放重复元素，便于统计
+1. MultiSet: 可放重复元素，便于统计
 2. MultiMap: 一个key对应多个value值，Spring中也有MultiValueMap(解决Map<K, List<V>>多值问题)
 ```Java
 // MultiMap：map嵌套set，list
@@ -193,7 +193,7 @@ System.out.println("------------->");
     System.out.println(Collections.max(list));
     ```
 3. 其他：disjoint(两集合没有相同元素返回true), addAll
-4. 同步控制：synchronizedXXX方法（源码使用Synchronized代码块实现）
+4. 同步控制：synchronizedXXX方法（源码使用Synchronized代码块实现）
     ```Java
     Collections.synchronizedList(list);
     // 源码(Collections内部)
@@ -204,7 +204,7 @@ System.out.println("------------->");
     ...
     ```
 ### Guava 集合工具类
-> Collections2, Lists, Sets, Maps, Queues, MultiSets, MultiMaps, Tables......
+> Collections2, Lists, Sets, Maps, Queues, MultiSets, MultiMaps, Tables......
 ```Java
 // 静态工厂方法(内部使用Collections.addAll)
 List<Integer> integers = Lists.newArrayList(1, 2, 3, 4);
@@ -231,7 +231,7 @@ System.out.println(Iterables.partition(integerIterable, 2));
 适用条件：
 > 1. 使用空间换取时间（速度）
 > 2. 一些key可以被频繁查询
-> 3. 存储部分数据（本地）
+> 3. 存储部分数据（本地）
 
 创建方式：CacheLoader(推荐使用)和Callable
 ```Java
