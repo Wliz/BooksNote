@@ -236,12 +236,12 @@ System.out.println(Iterables.partition(integerIterable, 2));
 创建方式：CacheLoader(推荐使用)和Callable
 ```Java
 // CacheLoader
- LoadingCache<String, WhiteList> whiteListLoadingCache =                CacheBuilder.newBuilder()
+ LoadingCache<String, WhiteList> whiteListLoadingCache = CacheBuilder.newBuilder()
             .expireAfterAccess(CACHE_MINUTES, TimeUnit.MINUTES)
         .build(CacheLoader.from((key) -> whiteListMapper.selectByAppKey(key)));
 
 // or
-LoadingCache<String, WhiteList> whiteListLoadingCache =                 CacheBuilder.newBuilder()
+LoadingCache<String, WhiteList> whiteListLoadingCache =  CacheBuilder.newBuilder()
             .expireAfterAccess(CACHE_MINUTES, TimeUnit.MINUTES)
             .build(new CacheLoader<String, WhiteList>() {
                 @Override
