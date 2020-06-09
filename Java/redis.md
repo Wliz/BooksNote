@@ -5,7 +5,7 @@ Redis是遵守BSD协议，高性能的key-value数据库
 
 - Redis支持数据持久化，内存数据保存磁盘，可以重启再次加载
 - Redis支持主从数据备份
-- Redis支持多种数据类型如list，set，zset，hash etc.
+- Redis支持多种数据类型如list，set，zset，hash, String.
 - Redis读速度达到11w/s，写8.1w/s
 - Redis所有操作都是原子性，支持多个操作合并后原子性执行
 - Redis支持订阅发布（publish/subscribe），key过期等
@@ -84,6 +84,7 @@ list是简单的字符串列表，按照插入顺序排序，也可以从头部�
 
 对应命令：
 - lpush key value [value ...] 左进右出（多值）
+- brpoplpush source target timeout 从list中最后一个元素弹出并放入到另外一个list集合中，否则等待超时
 - lpushx key value (x代表key存在时)
 - rpush key value [value ...] 右进左出（多值）
 - rpushx key value 
