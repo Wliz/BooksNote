@@ -24,3 +24,6 @@
         remainTime = overtime - now;
     }
     ```
+## Integer 缓存
+
+Integer缓存默认缓存范围是-128到127，但下限不可调整-128，上限可调整，需要使用vm调整参数：-XX:AutoBoxCacheMax=256
