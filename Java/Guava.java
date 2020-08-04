@@ -8,6 +8,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.*;
 import com.google.common.primitives.Ints;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -25,6 +27,7 @@ import org.springframework.util.MultiValueMap;
  * @date 2018-12-21 13:02
  */
 public class BaseTest {
+
     /**
      * Guava 不可变集合
      */
@@ -42,14 +45,12 @@ public class BaseTest {
         }
         System.out.println("------------->");
 
-
         ImmutableSet<String> colorNames = ImmutableSet.of("red", "blue");
         colorNames.forEach(System.out::println);
-//        colorNames.remove("purple");
+        //        colorNames.remove("purple");
 
         ImmutableSet<User> users = ImmutableSet.of(new User(), new User());
-        users.forEach(u ->u.setName(Math.random() + ""));
-
+        users.forEach(u -> u.setName(Math.random() + ""));
     }
 
     /**
@@ -126,7 +127,6 @@ public class BaseTest {
         //            System.out.println("spring l: " + l);
         //        }
 
-
         // Table: 嵌套map
         Table<String, Integer, Double> table = HashBasedTable.create();
         table.put("w", 1, 12.4);
@@ -178,12 +178,13 @@ public class BaseTest {
     @Test
     public void cache() {
         LoadingCache<String, Integer> cache = CacheBuilder.newBuilder()
-            // 缓存数量
-            .maximumSize(10)
-            // 缓存有效期5秒
-            .expireAfterWrite(5, TimeUnit.SECONDS)
-            .removalListener(notification -> System.out.println("key: " + notification.getKey() + " value: " + notification.getValue()))
-            .build(CacheLoader.from(key -> -1));
+                                                          // 缓存数量
+                                                          .maximumSize(10)
+                                                          // 缓存有效期5秒
+                                                          .expireAfterWrite(5, TimeUnit.SECONDS).removalListener(
+                        notification -> System.out.println(
+                                "key: " + notification.getKey() + " value: " + notification.getValue()))
+                                                          .build(CacheLoader.from(key -> -1));
 
         // 只进行查询，未命中返回null
         System.out.println("key1: " + cache.getIfPresent("key1"));
