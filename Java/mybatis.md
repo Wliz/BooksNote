@@ -1,6 +1,8 @@
 Mybatis是一个可以自定sql，存储过程和高级映射的持久层框架；
 
-Mybati缓存：一级缓存和二级缓存；以及缓存在session中，默认开启；二级缓存存放在命名空间里，默认不打开；使用二级缓存属性，类需要实现Serializable序列化接口（用来保存对象状态），可在映射文件中配置]\<cache/>
+mybatis理解：https://juejin.im/post/6844904087549378574
+
+Mybati缓存：一级缓存和二级缓存；以及缓存在session中，默认开启；总二级缓存存放在命名空间里，默认打开，若使之生效需要在映射文件内部配置；使用二级缓存属性，类需要实现Serializable序列化接口（用来保存对象状态），可在映射文件中配置]\<cache/>【需要在对应的mapper文件中】
 
 
 ## mybatis如何分页，分页插件原理？
@@ -13,6 +15,8 @@ Mybati缓存：一级缓存和二级缓存；以及缓存在session中，默认�
 
 1. mybatis仅仅可以编写针对ParameterHandler，ResultSetHanlder，StatementHandler, Exector这四个接口的插件，mybatis通过动态代理，为需要拦截的接口生成代理对象以实现接口方法的拦截功能，每当执行这4中接口对象的方法时，就会进入拦截方法，具体就是InvocationHanlder的invoke方法；
 2. 实现mybatis的Itnerceptor接口并复写intercept方法，然后给插件编写注解，执行拦截对象；
+
+注：Executor主要负责维护一级缓存和二级缓存，并提供事务管理的相关操作，将数据库相关操作委托给StatementHandler完成。StatementHandler首先通过ParameterHandler完成sql语句参数绑定，通过statement对象执行sql语句并得到结果集，通过ResultSetHandler完成结果集映射，得到结果对象并返回；
 
 ## mybatis动态sql做什么？都有那些动态sql，简述一下动态rsql的执行原理？
 
@@ -52,7 +56,9 @@ hibernate属于全自动orm映射框架，使用hibernate查询关联对象或�
 
 ## 一个xml映射文件，都会写一个dao接口对应，dao工作原理，是否可以重载？
 
-不可以重载；因为通过到寻找xml对应的sql的时候是通过全限定类名+方法名的保存和寻找策略。
+不可以重载；因为通过到寻找xml对应的sql的时候是通过接口名+方法名的保存和寻找策略。
+
+常用动态代理包括JDK内置动态代理和基于CGlib等第三方组件的方式，mybatis采用JDK内置动态代理创建动态代理对象；
 
 接口工作原理：jdk动态代理原理，运行时为dao生成proxy，代理对象会拦截接口方法，执行对应的sql返回数据；
 
@@ -68,3 +74,45 @@ hibernate属于全自动orm映射框架，使用hibernate查询关联对象或�
 - id相同
 - 参数类型相同
 - 结果类型相同
+
+## mybatis核心流程
+1. 初始化阶段：读取xml配置文件和注解中的配置信息，创建配置对象，并完成各个模块的初始化工作；
+    - mybatis将所有配置文件经过解析后加载到重量级对象configuration对象中；
+
+2. 代理阶段：封装掰成模型，使用mapper接口开发的初始化工作；
+    - 通过configuration对象构建sqlSession，然后通过动态代理获取对应的接口代理对象mapper，然后调用Executor执行器执行
+3. 数据读取阶段：完成sql解析，参数映射，sql执行，结果反射解析过程；
+    - 通过configuration中定义的结果映射处理器进行结果映射
+
+
+## MyBatis源码解析
+
+### Mybatis结构划分
+
+- 接口层：定义了暴露给应用程序调用的API
+    - sqlsession
+- 核心处理层：实现了核心处理流程，包括mybatis初始化和完成一次数据操作涉及的全部流程
+    - 配置解析
+    - 插件
+    - 参数映射
+    - sql解析
+    - sql执行
+    - 结果集映射
+- 基础支持层：为核心处理层提供良好的基础支撑，如反射，日志，事务等
+    - 缓存
+    - 数据源
+    - 事务
+    - 日志
+    - 加载
+    - ……
+        
+主要构件：
+- SqlSession：mybatis顶层api，表示和数据库交互会话，完成相应功能
+- Executor：执行器，mybatis调度核心，负责参数解析，sql执行，结果集映射等
+- StatementHandler: 封装JDBC的Statement操作，负责结果集转换；
+- ParameterHandler: 参数解析映射，将参数映射和实参绑定
+- TypeHanlder: java和jdbc类型转换
+- MappedStatement: 维护SQL语句的封装
+- SqlSource: 动态生成sql语句，封装到BoundSql中
+- BoundSql: 动态生成的sql和参数
+- Configuration： 所有配置全部维持在该类实例对象中

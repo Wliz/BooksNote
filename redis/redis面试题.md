@@ -111,6 +111,7 @@ LinkedHashMap: HashMap和双向链表合二为一就是该类，HashMap是无序
 后续：如果redis服务正在给线上提供服务，使用keys会出问题？出问题是什么问题？
 
 redis是单线程服务（新版本支持多线程，可能需要了解），keys会导致线程阻塞一段时间，服务停滞，直到keys执行结束；这个时候可以使用scan指令，可以物阻塞的提取出对应key列表，但会有重复概率，所有需要在客户端去重，整个时间比keys要长；
+https://www.runoob.com/redis/keys-scan.html
 
 ## redis如何做延时队列
 
