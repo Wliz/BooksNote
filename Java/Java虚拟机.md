@@ -5,7 +5,70 @@
 - 设置：元数据信息，如对象hash码，以及GC分代年龄等信息
 - 对象初始化：按照代码初始化
 
-注：对象的内存布局（对象头，实例数据）
+注：（8个字节的倍数）对象的内存布局（对象头，实例数据，【数组长度（数组对象才有）】，对齐填充）
+
+## 对象包括哪些内容？只能是8byte的倍数
+
+
+对象头表（64bit）：
+lock【锁标记】：
+- 01：默认，偏向锁
+- 00： 轻量级锁
+- 10： 重量级锁
+- 11： GC标记
+
+biased_lock(是否偏向偏向锁标记)：
+- 0：不可偏向
+- 1：可偏向
+
+age：4bit的对象年龄（对应年轻代中的Survivor中的from和to区，复制一次加1）
+
+identity_hashcode:32位的对象标识Hash码，采用延迟加载技术；调用System.identityHashCode计算；当对象被锁定时，该值会移动到管程monitor
+
+thread：持有偏向锁的线程id
+
+epoch： 偏向时间戳
+
+ptr_to_lock_record: 指向栈中锁记录的指针
+
+ptr_to_heavyweight_monitor: 指向管程Monitr的指针
+
+| 类型 | Mark Word(64bit)对象头 | kclass point(32bit 4byte) 类型指针 |
+|-|-|-|
+| 无锁 | unused:25 - identity_hash_code:31 - unused:1 - age:4 - biased_lock:1 - lock:2 | 4|
+| 偏向锁 | thread:54 - epoch:2 - unused:1 - age:4 - biased_lock:1 - lock:2 | 4 | 
+| 轻量级锁 | ptr_to_lock_record:62 | lock:2 | 4 |
+| 重量级锁 | ptr_to_heavyweight_monitor:62 | lock:2 | 4 |
+| GC标记 | 无 | lock:2 | 4 |
+
+注：当无锁时分为两种情况如下：
+
+1. 无锁不可偏向：001，有hashcode
+2. 无锁可偏向：101，无hashcode
+
+另外锁膨胀其实就是锁升级过程：偏向锁 -》 轻量级锁 -》重量级锁；
+
+</br>
+
+- 对象头
+    - Mark Word：64bit
+    - 类型指针：kclass point：4byte或8byte
+    - 数组长度【数组对象才有】
+- 实例数据
+- 对其填充字节    
+
+https://blog.csdn.net/lkforce/article/details/81128115
+
+
+包括两部分mark word【64bit = 8byte】和kclass point【32bit = 4byte，长度有可能为8，要看有没有开启指针压缩】（类型指针）
+
+小端模式：高地址存高字节，低地址存低字节
+
+synchronized如果是同一个线程加锁，偏向锁；
+交替执行，轻量级锁；
+资源竞争--mutex，重量级锁；
+
+
 
 # Java字节码指令
 Java虚拟机是基于栈的架构，其指令有操作码和操作数组成。
