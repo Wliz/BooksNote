@@ -62,6 +62,12 @@ https://blog.csdn.net/lkforce/article/details/81128115
 
 包括两部分mark word【64bit = 8byte】和kclass point【32bit = 4byte，长度有可能为8，要看有没有开启指针压缩】（类型指针）
 
+JVM启动时会进行一系列复杂活动，如加载配置，系统类初始化等；在这个过程中会使用大量的synchronized对对象加锁，而且这些锁不是偏向锁；为了减少初始化时间，jvm默认延迟加载偏向锁，延迟大概4s左右，可以通过jvm参数-XX:BiasedLockingStartupDelay=0取消延迟加载；
+
+偏向锁是一个特殊状态的无锁（对应thread和epoch均为0）；
+
+https://www.cnblogs.com/LemonFive/p/11246086.html
+
 小端模式：高地址存高字节，低地址存低字节
 
 synchronized如果是同一个线程加锁，偏向锁；

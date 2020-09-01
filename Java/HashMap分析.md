@@ -42,7 +42,7 @@ The load factor is a measure of how full the hash table is allowed to get before
     1.对key做hash，然后计算对应数组下标index元素
     2.如果对应index没有hash冲突，则直接放入对应的bucket中（第一个元素）
     3.如果hash冲突（碰撞），以链表形式存储bucket中
-    4.如果链表过长（binCount >= TREEIFY_THRESHOLD - 1），则转换链表为红黑树
+    4.如果链表过长（binCount >= TREEIFY_THRESHOLD - 1），同时还要判断集合长度是否小于64，若小于则扩容，否则转换链表为红黑树
     5.最后一系列处理后，判断节点是否存在（不管是否是新节点还是旧节点），用value替换并返回
     6.++size > threshold 超了，则重置哈希表
 

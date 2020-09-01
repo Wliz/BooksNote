@@ -25,4 +25,4 @@ ThreadLocal为每一个线程提供维护变量的副本，把共享数据的可
 
 使用ThreadLocal要注意remove！
 
-因为ThreadLocalMap的可以为ThreadLocal，所以会导致线程结束后内存并不会被回收，必须要等待所有使用该对象的线程执行接触才能回收，容易导致OOM；
+因为ThreadLocalMap的key为ThreadLocal，所以会导致线程结束后内存并不会被回收，必须要等待所有使用该对象的线程执行接触才能回收，容易导致OOM；
