@@ -1,6 +1,18 @@
 # Spring Cloud
 
-Spring Cloud流应用程序启动器是基于Spring Boot的Spring继承应用程序，是一个微服务框架
+Spring Cloud流应用程序启动器是基于Spring Boot的Spring继承应用程序，是一个微服务框架;
+
+是一系列框架的有序集合，利用Spring Boot的开发便利简化了分布式系统基础设施的开发，如服务注册发现，配置中心，服务网关，负载均衡，断路器，数据监控等，都可以用Spring Boot的开发风格做到一键启动和部署；
+
+## Spring Cloud Netflix
+
+Netflix OSS开源组件集成，包括Eureka，Ribbon，Hystrix，Feign，Zuul等组件；
+
+- Eureka：服务治理组件，包括服务端注册中心和客户端的服务发现机制；
+- Ribbon：负载均衡的的服务调用组件，具有多种负载均衡调用策略；（提供服务定位和客户端负载均衡）
+- Hystrix：服务容错组件，实现断路器模式，为依赖服务的出错和延迟提供容错能力；（实现服务熔断，服务降级和资源隔离）
+- Feign：基于ribbon和hystrix的声明式服务调用组件；
+- zuul：API网关组件，对请求提供路由和过滤功能；
 
 ## 服务注册发现？
 Eureka服务注册和发现，所有的服务都在Eureka服务器上注册并通过调用Eureka服务器完成查找；

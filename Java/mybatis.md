@@ -63,7 +63,7 @@ hibernate属于全自动orm映射框架，使用hibernate查询关联对象或�
 接口工作原理：jdk动态代理原理，运行时为dao生成proxy，代理对象会拦截接口方法，执行对应的sql返回数据；
 
 
-## mybatis有哪些Execute处理器，区别？
+## mybatis有哪些Executor处理器，区别？
 
 1. SimpleExecutor: 执行一次update或select，开启一个statement对象，用完立即关闭；
 2. RecuseExecutor: 执行update或select，以sql作为key查找statement，存在使用，不存在就创建，使用后不关闭statement对象，放到map中；

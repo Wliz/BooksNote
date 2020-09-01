@@ -31,7 +31,7 @@ epoch： 偏向时间戳
 
 ptr_to_lock_record: 指向栈中锁记录的指针
 
-ptr_to_heavyweight_monitor: 指向管程Monitr的指针
+ptr_to_heavyweight_monitor: 指向管程Monitor的指针
 
 | 类型 | Mark Word(64bit)对象头 | kclass point(32bit 4byte) 类型指针 |
 |-|-|-|

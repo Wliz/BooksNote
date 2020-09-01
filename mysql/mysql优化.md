@@ -48,3 +48,5 @@ type（链接类型）：
 key（优化器实际使用的索引）：可以强制mysql使用索引或者忽略索引【FORCE INDEX，USE INDEX，IGNORE INDEX】
 
 一般优化策略：索引优化，sql改写，参数优化，优化器；
+
+注：mysql使用limit offset,n，并不是跳过offset行，而是取offset+n行，放弃前offset行，返回n行，所以当offset特别大时，效率比较低；

@@ -38,6 +38,8 @@ bgsave原理：fork和cow，fork是redis通过创建子进程进行bgsave操作�
 - 惰性过期：使用key时才判断key是否过期，过期则清理
 - 定期过期：两者折中（todo，需要去查询具体细节）
 
+https://thinkwon.blog.csdn.net/article/details/103522351
+
 LRU（Least recently used最近最少未使用）：如Java的LinkedHashMap(capacity, DEFAULT_LOAD_FACTORY, true);
 
 // 为true时代表按照访问顺序排序，作为LRU缓存；为false时，按照插入顺序，为FIFO
