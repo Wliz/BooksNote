@@ -18,6 +18,11 @@ memcached使用多线程，子线程执行任务，主线程监听，在多线�
 redis实现思路（如redisson）：【需要去网络查询文档处理，好像又好几种方式】
 todo
 
+注：
+集群下使用Redisson分布式锁： https://blog.csdn.net/weixin_44565095/article/details/100598965?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.channel_param&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.channel_param
+
+https://mp.weixin.qq.com/s?__biz=MzU5ODUwNzY1Nw==&mid=2247484155&idx=1&sn=0c73f45f2f641ba0bf4399f57170ac9b&scene=21#wechat_redirect
+
 ## redis持久化，底层实现，优缺点
 
 RDB（Redis DataBase）：在不同的时间点将redis的数据生成快照并同步到磁盘上，并定期更新磁盘快照；缺点（消耗时间，性能（fork+io），易丢失数据）
@@ -38,6 +43,16 @@ bgsave原理：fork和cow，fork是redis通过创建子进程进行bgsave操作�
 - 惰性过期：使用key时才判断key是否过期，过期则清理
 - 定期过期：两者折中（todo，需要去查询具体细节）
 
+淘汰策略：https://www.jianshu.com/p/8aa619933ebb
+
+淘汰策略共有6种，分为两类对应全部key和设置了过期时间的key
+- 内存满时，写入操作报错；
+- 内存满时，写入操作时删除最近最少使用key；
+- 内存满时，写入操作会随机删除一个key；
+- 内存满时，从设置过期时间的键中移除最近最少使用的key；
+- 内存满时，从设置过期时间的键中随机移除一个；
+- 内存满时，从设置过期时间的键中找到快要过期的key删除；
+
 https://thinkwon.blog.csdn.net/article/details/103522351
 
 LRU（Least recently used最近最少未使用）：如Java的LinkedHashMap(capacity, DEFAULT_LOAD_FACTORY, true);
@@ -55,15 +70,36 @@ LinkedHashMap: HashMap和双向链表合二为一就是该类，HashMap是无序
 
 - 缓存穿透：指查询一个不存在的数据，缓存未命中，去db拉取并更新缓存；如果有大量不存在数据查询，或拖垮db；
     - 解决方案：
-        - 第一种将查询的不存在数据缓存起来，value为null，过期时间设置很短，避免给db带来压力
-        - 第二种采用一个很大的记录存在数据的布隆过滤器bitmap，进行布隆过滤；
-- 缓存击穿：设置过期时间的key数据在过期时间点过期，而在过期时间点大量查询该key的请求过来，会去db查询，导致拖垮db；
+        - 第一种将查询的不存在数据缓存起来，value为null，过期时间设置很短，避免给db带来压力（同样的key）
+        - 第二种采用一个很大的记录存在数据的布隆过滤器bitmap，进行布隆过滤（不同的key场景）；
+- 缓存击穿：设置过期时间的key数据在过期时间点过期，而在过期时间点大量查询该key的请求过来，会去db查询，导致拖垮db，造成数据库宕机；
     - 解决方案：
         - 第一种使用互斥锁，缓存失效时，非立即load db，使用setnx设置锁，操作成功获取锁load db并更新缓存；否则重试get缓存
         - 缓存永不过期：物理缓存不过期，逻辑过期（后台异步线程刷新缓存）
 - 缓存雪崩：设置缓存时采用了相同的过期时间，导致缓存中大量缓存数据同时过期，请求全部转发到db，db压力过重雪崩；与击穿相比是击穿是单个key，雪崩为多key同时失效
     - 解决方案：
         - 将不同key的过期时间分散开，避免同时失效，可以在统一时间基础上增加随机时长，降低引发大量key同时失效
+
+
+ 布隆过滤器（Bloom Filter）：一个长度为m比特位的位数组（bit array）与k个hash函数（hash function）组成的数据结构，位数组初始化均为0，所有hash函数都可以分别把输入数据尽量均匀散列；
+
+ 当插入一个元素时，将数据分别输入k个hash函数，产生k个hash值。以hash值作为位数组中的下标，将所有k个对应的比特置为1；
+
+ 当查询（判断一个数据是否存在）一个元素时，同样将数据输入k个hash函数，检查对应的k个比特位。如果出现任意一位为0，表明元素一定不在集合中；如果全为1，表明有很大可能在集合中，为什么说是不一定在呢，因为一个bit位置为1可能会受到其他元素的而影响，即假阳性；假阴性在bf中不会出现；
+
+ 优点：
+ - 不存储数据本身，只用bit表示，占用空间小，保密性好；
+ - 时间效率高，插入和查询时间复杂度o(k);
+ - hash函数之间相互堵路，可以在硬件指令层面并行计算；
+
+ 缺点：
+ - 存在假阳性概率，不适用用要求100#准确率的情景；
+ - 只能插入和查询元素，不能删除元素；
+
+ guava中布隆过滤器BloomFilter，其中默认的容错率为0.03左右
+
+ https://blog.csdn.net/nrsc272420199/article/details/106366583
+
 
 ## 选择缓存时，选择redis，还是memcached？
 
@@ -112,7 +148,7 @@ LinkedHashMap: HashMap和双向链表合二为一就是该类，HashMap是无序
 
 后续：如果redis服务正在给线上提供服务，使用keys会出问题？出问题是什么问题？
 
-redis是单线程服务（新版本支持多线程，可能需要了解），keys会导致线程阻塞一段时间，服务停滞，直到keys执行结束；这个时候可以使用scan指令，可以物阻塞的提取出对应key列表，但会有重复概率，所有需要在客户端去重，整个时间比keys要长；
+redis是单线程服务（新版本支持多线程，可能需要了解），keys会导致线程阻塞一段时间，服务停滞，直到keys执行结束；这个时候可以使用scan指令，可以无阻塞的提取出对应key列表，但会有重复概率，所有需要在客户端去重，整个时间比keys要长；
 https://www.runoob.com/redis/keys-scan.html
 
 ## redis如何做延时队列

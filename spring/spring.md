@@ -135,6 +135,7 @@ Spring要根据BeanDefinition来实例化Bean，把解析的标签，扫描的�
 
 通常GenericBeanDefinition用来注册用户可见的BeanDefinition；Child/RootBeanDefinition用来预定义具有父子关系的BeanDefinition；
 
+http://www.spring4all.com/article/16302
 
 ## Spring Bean的实例化以及di过程？？？？？todo
   
@@ -167,6 +168,8 @@ CGLIB代理：CglibAopProxy
 - 切面对象包装，将自定义的MethodInterceptor【Object[] specificInterceptors】类型的类包装成Advisor切面类并加入代理工厂
 - 根据proxyTargetClass配置判断使用jdk动态代理还是cglib动态代理【DefaultAopProxyFactory.createAopPoxy(config)】
 - 创建代理对象，并把代理工厂对象传入到jdk或cglib中
+
+## 嵌套AOP
 
 ## Spring MVC
 
