@@ -63,7 +63,7 @@ hibernate属于全自动orm映射框架，使用hibernate查询关联对象或�
 接口工作原理：jdk动态代理原理，运行时为dao生成proxy，代理对象会拦截接口方法，执行对应的sql返回数据；
 
 
-## mybatis有哪些Execute处理器，区别？
+## mybatis有哪些Executor处理器，区别？
 
 1. SimpleExecutor: 执行一次update或select，开启一个statement对象，用完立即关闭；
 2. RecuseExecutor: 执行update或select，以sql作为key查找statement，存在使用，不存在就创建，使用后不关闭statement对象，放到map中；
@@ -79,7 +79,7 @@ hibernate属于全自动orm映射框架，使用hibernate查询关联对象或�
 1. 初始化阶段：读取xml配置文件和注解中的配置信息，创建配置对象，并完成各个模块的初始化工作；
     - mybatis将所有配置文件经过解析后加载到重量级对象configuration对象中；
 
-2. 代理阶段：封装掰成模型，使用mapper接口开发的初始化工作；
+2. 代理阶段：封装模型，使用mapper接口开发的初始化工作；
     - 通过configuration对象构建sqlSession，然后通过动态代理获取对应的接口代理对象mapper，然后调用Executor执行器执行
 3. 数据读取阶段：完成sql解析，参数映射，sql执行，结果反射解析过程；
     - 通过configuration中定义的结果映射处理器进行结果映射

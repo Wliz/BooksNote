@@ -30,7 +30,7 @@ The load factor is a measure of how full the hash table is allowed to get before
 - DEFAULT_INITIAL_CAPACITY = 1 << 4 : 位运算默认初始值大小16
 - MAXIMUM_CAPACITY = 1 << 30 : 最大容量
 - DEFAULT_LOAD_FACTOR = 0.75f : 默认负载因子
-- TREEIFY_THRESHOLD = 8 : 超过该值时bucket转红黑树
+- TREEIFY_THRESHOLD = 8 : 超过该值时bucket转红黑树【同时要求数组长度也要大于等于64】
 - UNTREEIFY_THRESHOLD = 6 : bucket取消树化的阈值
 
 源码注释中强调如果对迭代性能要求高，则不要将capacity设置过大，load factor设置过小；当bucket中entries数目大于capacity * load factor时需要调整bucket大小为当前的两倍。
@@ -42,7 +42,7 @@ The load factor is a measure of how full the hash table is allowed to get before
     1.对key做hash，然后计算对应数组下标index元素
     2.如果对应index没有hash冲突，则直接放入对应的bucket中（第一个元素）
     3.如果hash冲突（碰撞），以链表形式存储bucket中
-    4.如果链表过长（binCount >= TREEIFY_THRESHOLD - 1），则转换链表为红黑树
+    4.如果链表过长（binCount >= TREEIFY_THRESHOLD - 1），同时还要判断集合长度是否小于64，若小于则扩容，否则转换链表为红黑树
     5.最后一系列处理后，判断节点是否存在（不管是否是新节点还是旧节点），用value替换并返回
     6.++size > threshold 超了，则重置哈希表
 
@@ -110,3 +110,36 @@ The load factor is a measure of how full the hash table is allowed to get before
         return null;
     }
 ```
+
+## CurrentHashMap
+
+CurrentHashMap在1.7的时候采用分段锁实现并发；而1.8使用cas+synchronized保证并发，内部仍然存在Segment，为了保证序列化的兼容性；
+
+Node<k,v>[] table;
+
+Node<k, v>[] nextTable;
+
+int sizeCtl;
+
+table默认大小为16，存储node节点，扩容时扩大两倍； Node中key和hash不可变，value和next是volatile，保证线程可见性；
+
+nextTable默认null， 扩容时新生成的数组，大小为原来的2倍；
+
+sizeCtl默认0，用来控制table的初始化和扩容操作 ，-1表示初始化或resized，-（1+正在重置线程数）正在被多个线程扩容；
+
+### CurrentHashMap如果实现多线程的支持？
+
+在initTable时通过变量sizeCtl实现只有一个线程在初始化，实现方式：
+- 定义为volatile，线程间可见
+- compareAndSwapInt，cas操作设置sizeCtl
+
+put方法：
+- 获取获取对应位置的node，tabAt函数
+- 添加新的Node，使用casTab函数，casTab是compareAndSwapObject的封装
+- 更新key对应的value或者处理hash冲突，使用synchronized，同时内部使用tabAt
+
+注：https://juejin.im/post/6844903944800436238
+
+总结：
+- 用synchronized+ cas+node+nodetree代替segment，只有在hash冲突，或者修改已经存在的值时才加锁，锁的粒度小，减少阻塞；
+- 链表节点数量大于8时，会将量表转换Wie红黑树进行存储，查询时间复杂度从o（n）变成遍历红黑树o（logn）
