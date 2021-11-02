@@ -154,3 +154,9 @@ https://www.runoob.com/redis/keys-scan.html
 ## redis如何做延时队列
 
 使用sortedSet，使用时间戳做score，消息内容作为key，zadd指令生产消息，消费者使用zrangebyscore获取n秒之前的数据做轮询消费；
+
+String：如果存储数字的话，是用int类型的编码;如果存储非数字，小于等于39字节的字符串，是embstr；大于39个字节，则是raw编码。
+List：如果列表的元素个数小于512个，列表每个元素的值都小于64字节（默认），使用ziplist编码，否则使用linkedlist编码
+Hash：哈希类型元素个数小于512个，所有值小于64字节的话，使用ziplist编码,否则使用hashtable编码。
+Set：如果集合中的元素都是整数且元素个数小于512个，使用intset编码，否则使用hashtable编码。
+Zset：当有序集合的元素个数小于128个，每个元素的值小于64字节时，使用ziplist编码，否则使用skiplist（跳跃表）编码
