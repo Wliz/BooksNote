@@ -24,7 +24,7 @@ Java IO分为字节流和字符流两大类
 
 字节流和字符流，字节流继承InputStream和OutPutStream，字符流继承InputStreamReader和OutputStreamWriter
 
-注：面试题 https://zhuanlan.zhihu.com/p/35066927
+注：面试题 https://zhuanlan.zhihu.com/p/3   5066927
 
 ## 字节流和字符流更喜欢那一个？
 
