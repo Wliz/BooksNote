@@ -27,7 +27,25 @@ JVM内存分配需要从类对象实例创建过程开始分析: 包括五个阶
   <version>xxx</version>
 </dependency>
 ```
+```Java
+class T2 {
+    // 8字节对象头
+    // 4字节类型指针(如果关闭-XX:-UseCompressedClassPointers或-XX:-useCompressOops压缩指针选项,则为8字节)
 
+    int id; // 4字节
+
+    String name;  // 4字节(关闭压缩后为8字节)
+
+    byte b;   // 1字节
+
+    Object o; // 4字节(关闭压缩后为8字节)
+
+    Integer[] a = new Integer[100];  // 占用4个字节(关闭压缩后为8字节)
+
+    public T2() {
+    }
+  }
+```
 为什么要指针压缩?
 - 64bit平台的hotspot中使用32指针(内存实际存储按照64位指针)会多出1.5倍内存,使用较大指针在主内存和本地缓存之间进行数据移动,会占用较大带宽,同时GC会承受较大压力;
 - 减少64bit平台下内存消耗,启用指针压缩功能;

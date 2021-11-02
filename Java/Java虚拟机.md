@@ -54,7 +54,7 @@ ptr_to_heavyweight_monitor: 指向管程Monitor的指针
 
 - 对象头
     - Mark Word：64bit
-    - 类型指针：kclass point：4byte或8byte
+    - 类型指针：kclass point：4byte或8byte[非压缩指针开启时为8字节]
     - 数组长度【数组对象才有】
 - 实例数据
 - 对其填充字节    
