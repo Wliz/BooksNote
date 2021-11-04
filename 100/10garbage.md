@@ -36,6 +36,7 @@ Full GC触发条件:
 资料: https://github.com/Snailclimb/JavaGuide/blob/master/docs/java/jvm/JVM%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6.md
 
 ## 垃圾收集器
+
 https://segmentfault.com/a/1190000037547621
 
 针对HotSpot VM的实现,内部GC分为两大类:
