@@ -29,7 +29,7 @@ Spring是一个轻量级的控制反转(IOC)和面向切面(AOP)容器框架.
 | OXM | JMS | Web | Portlet |
 | Transactions|-|-|-|
 |-|-|-|-|
-|AOP| Aspects | |Instrumentation | Messaging | 
+|AOP| Aspects |Instrumentation | Messaging | 
 |-|Core Container | -|-|
 | Beans | Core | Context | SpEL |
 | -|  - | - | -|
@@ -66,20 +66,20 @@ Spring是一个轻量级的控制反转(IOC)和面向切面(AOP)容器框架.
             AutowireCapableBeanFactory getAutowireCapableBeanFactory() throws IllegalStateException;
     }
 
-    // spring-context-support提供将第三方库几层到spring-context中,包括缓存,邮件,定时调度,模板引擎;[源码中可查询棘突目录]
+    // spring-context-support提供将第三方库集成到spring-context中,包括缓存,邮件,定时调度,模板引擎;[源码中可查询目录]
     ```
     - spring-expression: EL表达式支持,运行时灵活查询和操作对象;
 - ext层 -- 拓展层(较为核心),提供额外的支持,按需引入
-    - spring-aop: 基于动态代理(jdk动态代理or cglib代理)的切面变成,通过定义切入点,切面,进行切面管理;
+    - spring-aop: 基于动态代理(jdk动态代理or cglib代理)的切面编程,通过定义切入点,切面,进行切面管理;
     - spring-aspects: 与AspectJ集成,支持编译时织入,编译后织入,加载时织入;
-- DA层-- Data Access/Integration(数据授权,融合)    
+- DA层-- Data Access/Integration(数据授权,融合)
     - spring-jdbc: jdbc抽象封装,简化jdbc操作;
     - spring-tx: 基于ext拓展层spring-aop的AOP的事务支持;
     - spring-orm: orm相关支持API,  Object/Relational mapping;
     - spring-oxm: Object/XML mapping,xml相关文件映射支持API;
     - spring-jms: Java Message Service, java消息服务API;
 - web层
-    - spring-web: web应用几层包,提供基本web服务支持;
+    - spring-web: web应用集成包,提供基本web远程服务支持;
     - spring-webmvc: 基于spring-web,对servlet支持的增强;
 - Test:
     - spring-test: 支持spring组件与JUnit与TestNG的单元测试与集成测试,提供了spring的ApplicationContext缓存和可用于单独测试代码的模拟对象;
