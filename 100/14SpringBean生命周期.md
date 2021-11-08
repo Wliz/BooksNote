@@ -16,7 +16,7 @@ Spring Bean的生命周期有且仅有以下4个阶段:
 - initializeBean: 初始化阶段
 - ConfigurableApplicationContext#close(): 销毁阶段
 ```Java
-/**
+	/**
 	 * Actually create the specified bean. Pre-creation processing has already happened
 	 * at this point, e.g. checking {@code postProcessBeforeInstantiation} callbacks.
 	 * <p>Differentiates between default bean instantiation, use of a
@@ -61,7 +61,6 @@ Spring Bean生命周期相关拓展点很多,通过源码+分类方式方便记�
 
 ## 影响多个Bean的接口
 
-
 实现这些接口的Bean会切入到多个Bean的生命周期,功能非常强大,如自动注入和AOP的实现与它们都有关系;以下是Spring扩展中最重要的两个接口(均位于spring-beans包下):
 
 - BeanPostProcessor: 作用于Bean生命周期初始化前后(对应postProcessBeforeInitialization, postProcessAfterInitialization方法)
@@ -103,7 +102,7 @@ protected Object createBean(String beanName, RootBeanDefinition mbd, @Nullable O
 
 		try {
 			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
-            // 让BeanPostProcessors有机会返回一个代理Bean而非一个目标Bean实例,这里是实现AOP功能的关键点[AOP使用动态代理生成代理对象实现,但需要注意是否指定了targetSoruce,如果没有指定,使用的是after方法生成的代理对象,否则使用before生成代理对象]
+            // 让BeanPostProcessors有机会返回一个代理Bean而非一个目标Bean实例,这里是实现AOP功能的关键点[AOP使用动态代理生成代理对象实现,但需要注意是否指定了targetSoruce,如果没有指定,使用的是afterInitialization方法生成的代理对象,否则使用beforeInstantation生成代理对象]
             // 源码进入可跟踪到调用点
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
@@ -298,6 +297,3 @@ BeanPostProcessor本身也是Bean,那么就需要在业务bean初始化之前初
 		beanFactory.addBeanPostProcessor(new ApplicationListenerDetector(applicationContext));
 	}
     ```
-
-
-

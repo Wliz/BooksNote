@@ -86,7 +86,7 @@ spring框架并没有对单例Bean做多线程封装，单例bean的线程安全
 
 ## Spring用到的设计模式？
  
--  代理模式：AOP和remoting中用的多
+- 代理模式：AOP和remoting中用的多
 - 单例模式：BeanFactory创建实例对象
 - 模板方法：jdbcTemplate，RedisTemplate等
 - 工厂模式：BeanFactory创建实例对象
