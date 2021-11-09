@@ -202,7 +202,7 @@ protected Object initializeBean(String beanName, Object bean, @Nullable RootBean
 - ApplicationContext相关Aware则是通过BeanPostProcessor#postProcessorBeforeInitilization实现;如ApplicationContextAwareProcessor
 ```Java
 // ApplicationContextAwareProcessor
-// 判断Bean是否实现了Aware相关方法(通过接口判断),如果实现了,咋调用回调方法将资源传递给bean
+// 判断Bean是否实现了Aware相关方法(通过接口判断),如果实现了,则调用回调方法将资源传递给bean
 @Override
 	@Nullable
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {

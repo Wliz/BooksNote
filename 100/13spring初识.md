@@ -29,7 +29,7 @@ Spring是一个轻量级的控制反转(IOC)和面向切面(AOP)容器框架.
 | OXM | JMS | Web | Portlet |
 | Transactions|-|-|-|
 |-|-|-|-|
-|AOP| Aspects |Instrumentation | Messaging | 
+|AOP| Aspects |Instrumentation | Messaging |
 |-|Core Container | -|-|
 | Beans | Core | Context | SpEL |
 | -|  - | - | -|
@@ -83,11 +83,6 @@ Spring是一个轻量级的控制反转(IOC)和面向切面(AOP)容器框架.
     - spring-webmvc: 基于spring-web,对servlet支持的增强;
 - Test:
     - spring-test: 支持spring组件与JUnit与TestNG的单元测试与集成测试,提供了spring的ApplicationContext缓存和可用于单独测试代码的模拟对象;
-
-
-
-
-
 
 资料:
 - https://www.jianshu.com/p/2225e872a164
