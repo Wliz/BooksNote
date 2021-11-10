@@ -49,6 +49,8 @@ Spring AOP使用动态织入,又称运行时织入,使用动态代理实现:(有
 - jdk动态带来: 代理类需要实现接口,生成一个实现相同接口的代理类;
 - cglib动态代理: 代理类不需要实现接口,使用ASM字节码技术生成代理类子类实现;
 
+注: spring在未强制指定cglib代理时,优先使用jdk动态代理(实现接口),强制指定时proxy-target-class,一定使用cglib动态代理;
+
 相关概念定义:
 
 - 切面(Aspect): Aspect类似Java中类声明,在Aspect中包含一些Pointcut以及相应的Advice(增强);
