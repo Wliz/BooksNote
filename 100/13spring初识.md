@@ -70,8 +70,8 @@ Spring是一个轻量级的控制反转(IOC)和面向切面(AOP)容器框架.
     ```
     - spring-expression: EL表达式支持,运行时灵活查询和操作对象;
 - ext层 -- 拓展层(较为核心),提供额外的支持,按需引入
-    - spring-aop: 基于动态代理(jdk动态代理or cglib代理)的切面编程,通过定义切入点,切面,进行切面管理;
-    - spring-aspects: 与AspectJ集成,支持编译时织入,编译后织入,加载时织入;
+    - spring-aop: 基于动态代理(jdk动态代理or cglib代理)的切面编程,通过定义切入点,切面,进行切面管理;[动态织入]
+    - spring-aspects: 与AspectJ集成,支持编译时织入,编译后织入,加载时织入;[静态织入]
 - DA层-- Data Access/Integration(数据授权,融合)
     - spring-jdbc: jdbc抽象封装,简化jdbc操作;
     - spring-tx: 基于ext拓展层spring-aop的AOP的事务支持;
